@@ -17,6 +17,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/people", dataRoutes);
+app.use("/auth", authRoutes);
 
 app.get("/", (req, res, next) => {
   res.status(200).json({
