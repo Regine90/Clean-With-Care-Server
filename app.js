@@ -4,6 +4,8 @@ const helmet = require("helmet");
 const cors = require("cors");
 const path = require("path");
 const dataRoutes = require("./routes/dataRoutes");
+const authRoutes = require("./routes/authRoutes");
+
 
 const app = express();
 const PORT = 3000;

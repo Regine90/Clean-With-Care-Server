@@ -5,7 +5,7 @@ const {
   login,
   logout,
   localLogin,
-} = require("../controllers/authController");
+} = require("../controllers/authControllers");
 
 const router = express.Router();
 
