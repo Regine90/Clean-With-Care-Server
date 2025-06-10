@@ -5,11 +5,11 @@ const cors = require("cors");
 const path = require("path");
 const dataRoutes = require("./routes/dataRoutes");
 const authRoutes = require("./routes/authRoutes");
-
+const methodOverride = require("method-override");
 
 const app = express();
 const PORT = 3000;
-const data = require("./data/data");
+const communityData = require("./data/communityData");
 
 app.use(morgan("combined"));
 app.use(helmet());
@@ -17,6 +17,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(methodOverride("_method"));
 
 app.use("/api/people", dataRoutes);
 app.use("/auth", authRoutes);

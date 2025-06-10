@@ -1,6 +1,12 @@
 const express = require("express");
 
-const { getAllPeople, getPeople, createPeople, updatePeople, deletePeople } = require("../controllers/dataControllers");
+const {
+  getAllPeople,
+  getPeople,
+  createPeople,
+  updatePeople,
+  deletePeople,
+} = require("../controllers/dataControllers");
 
 const router = express.Router();
 
