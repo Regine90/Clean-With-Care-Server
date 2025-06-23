@@ -1,4 +1,4 @@
-const communityData = require("./data/communityData");
+const communityData = require("../data/communityData");
 
 const getAllPeople = async (req, res, next) => {
   try {
