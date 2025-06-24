@@ -1,9 +1,15 @@
 const mongoose = require("mongoose");
 
 const communityHelperSchema = new mongoose.Schema({
-  firstName: { type: String, required: true },
-  area: { type: String, required: true },
-  service: { type: String, required: true },
+  _id: String,
+  firstName: String,
+  area: String,
+  service: String,
 });
 
-module.exports = mongoose.model("CommunityHelper", communityHelperSchema);
+module.exports = mongoose.model(
+  "CommunityHelper",
+  communityHelperSchema,
+  "communityHelpers"
+);
+// <-- 3rd argument manually tells mongoose the exact collection name!

@@ -5,7 +5,7 @@ const CommunityHelper = require("../models/communityHelper");
 router.get("/", async (req, res) => {
   try {
     const helpers = await CommunityHelper.find({});
-    res.json({ data: helpers }); // Wrap data
+    res.json({ data: helpers });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
