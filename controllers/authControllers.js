@@ -1,3 +1,6 @@
+const bcrypt = require("bcrypt");
+const User = require("../models/user"); // Make sure you have your User model correctly set up
+
 const register = async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
 
@@ -60,3 +63,11 @@ const login = async (req, res, next) => {
     });
   }
 };
+
+const logout = (req, res) => {
+  req.logout(() => {
+    res.redirect("/");
+  });
+};
+
+module.exports = { register, login, logout };
