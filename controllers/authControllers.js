@@ -1,81 +1,62 @@
-const bcrypt = require("bcrypt");
-const User = require("../models/userModel");
-
-// REGISTER Controller
-const register = async (req, res) => {
-  const { firstName, lastName, username, password } = req.body;
+const register = async (req, res, next) => {
+  const { firstName, lastName, email, password } = req.body;
 
   try {
-    const existingUser = await User.findOne({ username });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res
-        .status(400)
-        .json({ error: { message: "User already exists." } });
+      return res.status(400).json({
+        error: { message: "User already exists with this email." },
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({
+    const newUser = new User({
       firstName,
       lastName,
-      username,
+      email,
       password: hashedPassword,
     });
 
+    await newUser.save();
+
     return res.status(201).json({
-      message: "New user created successfully!",
-      user: {
-        username: newUser.username,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
-      },
+      success: { message: "New user created successfully!" },
+      data: { email: newUser.email },
     });
-  } catch (err) {
-    console.error(err);
-    return res
-      .status(500)
-      .json({ error: { message: "Internal server error." } });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: { message: "Internal server error!" },
+    });
   }
 };
 
-// LOGIN Controller
-const login = async (req, res) => {
-  const { username, password } = req.body;
+const login = async (req, res, next) => {
+  const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
     if (!user) {
-      return res
-        .status(400)
-        .json({ error: { message: "Invalid username or password." } });
+      return res.status(400).json({
+        error: { message: "Invalid email or password." },
+      });
     }
 
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
-      return res
-        .status(400)
-        .json({ error: { message: "Invalid username or password." } });
+      return res.status(400).json({
+        error: { message: "Invalid email or password." },
+      });
     }
 
     return res.status(200).json({
-      message: "Login successful.",
-      user: {
-        username: user.username,
-        firstName: user.firstName,
-        lastName: user.lastName,
-      },
+      success: { message: "Login successful." },
+      data: { email: user.email, firstName: user.firstName },
     });
-  } catch (err) {
-    console.error(err);
-    return res
-      .status(500)
-      .json({ error: { message: "Internal server error." } });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: { message: "Internal server error!" },
+    });
   }
 };
-
-// LOGOUT Controller (optional for future session handling)
-const logout = async (req, res) => {
-  res.clearCookie("connect.sid");
-  return res.status(200).json({ message: "User logged out." });
-};
-
-module.exports = { register, login, logout };
