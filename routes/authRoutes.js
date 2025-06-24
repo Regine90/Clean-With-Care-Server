@@ -1,17 +1,14 @@
 const express = require("express");
 const passport = require("passport");
-
 const { register, login, logout } = require("../controllers/authControllers");
 
 const router = express.Router();
 
-// Auth routes
-router.post("/register", register);
+router.post("/signup", register);
 router.post("/login", login);
 router.get("/logout", logout);
-router.get("/login/error", (req, res) => res.json("Login error"));
 
-// Google OAuth routes
+// Google OAuth
 router.get(
   "/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
