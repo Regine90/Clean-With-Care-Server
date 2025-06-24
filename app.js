@@ -4,9 +4,14 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const cors = require("cors");
 const path = require("path");
+const communityHelperRoutes = require("./routes/communityHelperRoutes");
 const passport = require("./config/authStrategy");
 const dataRoutes = require("./routes/dataRoutes");
 const authRoutes = require("./routes/authRoutes");
+const communityHelperRoutes = require("./routes/communityHelperRoutes");
+app.use("/api/community-helpers", communityHelperRoutes);
+
+
 const methodOverride = require("method-override");
 const mongoose = require("mongoose"); // ✅ ADD THIS
 
