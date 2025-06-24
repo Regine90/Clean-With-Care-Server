@@ -7,7 +7,7 @@ const getAllPeople = async (req, res, next) => {
       success: {
         message: "This will lead to all the people pages in the data file.",
       },
-      data: peoples, // <-- send data directly (not wrapped inside {peoples})
+      data: peoples, 
     });
   } catch (error) {
     return res.status(400).json({
