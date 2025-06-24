@@ -3,8 +3,12 @@ const communityData = require("../data/communityData");
 const getAllPeople = async (req, res, next) => {
   try {
     const peoples = communityData;
-    return res.status(200).json(communityData);
-
+    return res.status(200).json({
+      success: {
+        message: "This will lead to all the people pages in the data file.",
+      },
+      data: peoples, 
+    });
   } catch (error) {
     return res.status(400).json({
       error: {
