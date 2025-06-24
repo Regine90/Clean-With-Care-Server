@@ -2,23 +2,25 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user"); // Make sure you have your User model correctly set up
 
 const register = async (req, res, next) => {
-  const { firstName, lastName, email, password } = req.body;
-
   try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({
-        error: { message: "User already exists with this email." },
-      });
-    }
+    const { firstName, lastName, email, password } = req.body;
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword,
-    });
+const emailLower = email.toLowerCase();
+
+const existingUser = await User.findOne({ email: emailLower });
+if (existingUser) {
+  return res.status(400).json({
+    error: { message: "User already exists with this email." },
+  });
+}
+
+const hashedPassword = await bcrypt.hash(password, 10);
+const newUser = new User({
+  firstName,
+  lastName,
+  email: emailLower,  
+  password: hashedPassword,
+});
 
     await newUser.save();
 
@@ -37,8 +39,10 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   const { email, password } = req.body;
 
+const emailLower = email.toLowerCase();
+
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: emailLower });
     if (!user) {
       return res.status(400).json({
         error: { message: "Invalid email or password." },
