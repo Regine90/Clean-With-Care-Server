@@ -2,12 +2,12 @@ const communityData = require("../data/communityData");
 
 const getAllPeople = async (req, res, next) => {
   try {
-    const peoples = data;
+    const peoples = communityData;
     return res.status(200).json({
       success: {
         message: "This will lead to all the people pages in the data file.",
       },
-      data: { peoples },
+      data: peoples, // <-- send data directly (not wrapped inside {peoples})
     });
   } catch (error) {
     return res.status(400).json({
