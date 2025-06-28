@@ -12,7 +12,6 @@ const userSchema = new Schema({
     trim: true,
   },
   email: {
-    // 🔧 updated field
     type: String,
     required: true,
     unique: true,

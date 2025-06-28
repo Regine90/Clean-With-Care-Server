@@ -1,13 +1,15 @@
-const communityData = require("../data/communityData");
+const communityHelper = require("../models/communityHelper");
 
+// GET all people
 const getAllPeople = async (req, res, next) => {
   try {
-    const peoples = communityData;
+    const helpers = await communityHelper.find();
+
     return res.status(200).json({
       success: {
         message: "This will lead to all the people pages in the data file.",
       },
-      data: peoples, 
+      data: { helpers },
     });
   } catch (error) {
     return res.status(400).json({
@@ -19,80 +21,111 @@ const getAllPeople = async (req, res, next) => {
   }
 };
 
+// GET one person by ID
 const getPeople = async (req, res, next) => {
-  const { _id } = req.params;
+  const { id } = req.params;
 
   try {
-    const people = data.find((people) => people._id === _id);
+    const people = await communityHelper.findById(id);
+
+    if (!people) {
+      return res.status(404).json({
+        error: { message: "Helper not found!" },
+      });
+    }
+
     return res.status(200).json({
-      success: { message: "Successful to continue!" },
+      success: { message: "Successfully found the helper!" },
       data: { people },
     });
   } catch (error) {
     return res.status(400).json({
-      error: { message: "Errorrr. Try again!" },
+      error: { message: "Error. Try again!" },
     });
   }
 };
 
+// POST create person
 const createPeople = async (req, res, next) => {
   const { firstName, area, service } = req.body;
 
   try {
-    const newPeople = {
+    const newHelper = new communityHelper({
       firstName,
       area,
       service,
-    };
+    });
+
+    await newHelper.save();
 
     return res.status(201).json({
-      success: { message: "Sucessful!" },
-      data: { newPeople },
+      success: { message: "Helper created successfully!" },
+      data: newHelper,
     });
   } catch (error) {
     return res.status(400).json({
-      error: { message: "Failed. Try again!" },
+      error: { message: "Creation failed. Try again!" },
     });
   }
 };
 
+// PUT update person by ID
 const updatePeople = async (req, res, next) => {
+  const { id } = req.params; 
   const { firstName, area, service } = req.body;
-  const { _id } = req.params;
 
   try {
-    const updatedPeople = {
-      firstName,
-      area,
-      service,
-    };
+    const updatedHelper = await communityHelper.findByIdAndUpdate(
+      id, 
+      { firstName, area, service },
+      { new: true }
+    );
 
-    return res.status(201).json({
-      success: { message: "Yayyy!!" },
-      data: { updatedPeople },
-    });
-  } catch (error) {
-    return res.status(400).json({
-      error: { message: "Update Failed!" },
-    });
-  }
-};
+    if (!updatedHelper) {
+      return res.status(404).json({
+        error: { message: "Helper not found!" },
+      });
+    }
 
-const deletePeople = async (req, res, next) => {
-  const { _id } = req.params;
-
-  try {
-    const peoples = data.filter((peoples) => peoples._id !== _id);
     return res.status(200).json({
-      success: { message: "Successful again!" },
-      data: { peoples },
+      success: { message: "Helper updated successfully!!" },
+      data: updatedHelper,
     });
   } catch (error) {
     return res.status(400).json({
-      error: { message: "Not working!" },
+      error: { message: "Update failed!" },
     });
   }
 };
+
+// DELETE person by ID
+const deletePeople = async (req, res, next) => {
+  const { id } = req.params; 
+  console.log("ID to delete:", id);
+
+
+  try {
+    const deletedHelper = await communityHelper.findByIdAndDelete(id); 
+
+    if (!deletedHelper) {
+      return res.status(404).json({
+        error: { message: "Helper not found!" },
+      });
+    }
+
+    return res.status(200).json({
+      success: { message: "Helper deleted successfully!" },
+      data: deletedHelper,
+    });
+  } catch (error) {
+    console.error("Delete error:", error); 
+    return res.status(400).json({
+      error: { message: "Deletion failed!" },
+      
+    });
+  }
+};
+
 
 module.exports = {
   getAllPeople,
